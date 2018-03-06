@@ -174,5 +174,107 @@ gap_cambodia <- gapminder %>%
 ```
 
 
+More tidyr!!
+
+How to add variables using `mutate`
+
+```{r}
+gapminder %>% 
+  mutate(index=1:nrow(gapminder)) #adding a column call index that goes from 1 to as many rows as the data frame has
+```
+
+
+```{r}
+gapminder %>% 
+  mutate(gdp= pop*gdpPercap) #create a new columne that multiplies the pop variable from gapminder data set times gdpPercap. Once I anounce the data frame name i can just call the variables
+```
+
+Excersise
+Find the max gdp Egypt and Vietnam and safe it ain a new column
+
+```{r}
+gapminder %>% 
+  filter(country %>% c("Egypt", "Vietnam")) %>% 
+  mutate(max_gdp=max(gdpPercap))
+
+
+gapminder %>% 
+  group_by(country) %>% 
+  filter(country %>% c("Egypt", "Vietnam")) %>% 
+  mutate(max_gpd=max(gdpPercap)) %>% 
+  ungroup() 
+
+
+
+```
+
+When you use the function group by, you have to make sure to ungroup the data frame if not you can encounter errors when working witht he grouped frame.
+For solving this you have to ungroup at the ende onf the code.
+
+
+Sdummerise and groupby finctions together!
+
+Finding tme max gdp for all countries!
+
+```{r}
+gapminder %>% 
+  group_by(country) %>% 
+  mutate(gdp= pop*gdpPercap) %>%
+  summarize(max_gdp= max(gdp)) %>% 
+  ungroup()
+  
+
+```
+
+
+Arraging the information in a certain order
+Default form arrange funtion is from min to max
+
+```{r}
+gapminder %>% 
+  group_by(country) %>% 
+  mutate(gdp= pop*gdpPercap) %>%
+  summarize(max_gdp= max(gdp)) %>% 
+  ungroup() %>% 
+  arrange(max_gdp)
+```
+
+For arranging in the max to min way
+
+```{r}
+gapminder %>% 
+  group_by(country) %>% 
+  mutate(gdp= pop*gdpPercap) %>%
+  summarize(max_gdp= max(gdp)) %>% 
+  ungroup() %>% 
+  arrange(desc(max_gdp))
+
+```
+
+Lets try to gdp in countries in Asia
+
+```{r}
+gapminder %>% 
+  filter(continent=="Asia") %>% 
+  group_by(country) %>%
+  mutate(gdp= pop*gdpPercap) %>%
+  summarize(max_gdp= max(gdp)) %>% 
+  ungroup() %>% 
+  arrange(desc(max_gdp))
+  
+  
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 
