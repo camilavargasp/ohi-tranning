@@ -1,0 +1,178 @@
+---
+title: "dplyr and tidyr"
+author: "Camila Vargas"
+date: "3/6/2018"
+output: html_document
+---
+
+Chapter 6: Data wrangling - dplyr
+
+How do you organize your data - Data wrangling - keeping the raw data raw but moving around columnes and rows to have the necesary tables to answer the questions you want to answe.
+
+First make it tydy anf the wrangle it how you want it.
+
+tidyverse - group of packeges that contains all the necesary packeges to organize, transform adn visualize your data.
+
+We are going to wrangle gapminder data using `diplyr`
+
+```{r}
+library(tidyverse) #intall.packages (tidyverse)
+
+#read in data from url
+gapminder <- read.csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/gapminder.csv")
+
+```
+
+Explore
+```{r}
+head(gapminder) #explore the first rows and columnes of the data set
+
+```
+
+```{r}
+tail(gapminder, 10) #10 last entries of the data source
+```
+
+Explore the structure of the data
+
+```{r}
+str(gapminder)
+```
+
+
+Data frame allows you to have number and words in one data set.
+Tibble is the new generation of data frame where you can combine all sort of things, and easily use ggplot
+
+
+Othe information about the dataframe
+
+```{r}
+names(gapminder) #colnames
+dim(gapminder) #dimension of the data frame how many rows and how many col
+ncol(gapminder) #number of col
+nrow(gapminder) #number of rows of gapminder
+
+
+#create a dim from ncol and nrow
+c(nrow(gapminder), ncol(gapminder)) #c() is a function that combines. In this case number of rows and number of col in the data frame gapminder
+
+
+```
+
+
+Summary statistics
+Looks at statistics quickly and also tells you if there are any NA
+
+```{r}
+summary(gapminder)
+```
+
+Skimmer packege
+
+```{r}
+library(skimr) #instal.package (skimr)
+skim(gapminder)
+
+```
+
+
+Explore inside the data frame
+
+```{r}
+gapminder$lifeExp
+```
+
+```{r}
+head(gapminder$lifeExp) #just the head of the variable lifexpectancy
+```
+
+Filtering observation across rows we use the filter function
+
+Selecting is how you filter by columnes
+
+mutate
+
+summarise
+
+arrange
+
+#Using dplyr
+
+Filter by rows
+```{r}
+library(tidyverse)
+filter(gapminder, lifeExp <29)
+names(gapminder)
+
+filter(gapminder, country=="Mexico")
+
+#to filter two countries use the %in% operator
+
+x <- filter(gapminder, country %in% c("Mexico", "Chile"))
+
+
+#filter one country in a specific year
+
+filter(gapminder, country=="Mexico", year==2002)
+
+```
+
+
+Select by columnes
+
+```{r}
+select(gapminder, year, lifeExp)
+```
+
+Use the `-` to desselect
+
+```{r}
+select(gapminder, -continent, -lifeExp)
+```
+
+
+Use filter and select together
+
+```{r}
+gap_Cambidia <- filter(gapminder, country=="Cambodia")
+gap_Cambodia2 <- select(gap_Cambidia, -continent, -lifeExp)
+
+
+
+```
+
+
+Life changing pipe operator %>% ... "And then"
+
+```{r}
+gapminder %>% head() #equivalent to head(gapminder)
+```
+
+
+```{r}
+gapminder %>% head(3) #equivalent to head(gapminder, 3)
+```
+
+
+Lets do this
+gap_Cambidia <- filter(gapminder, country=="Cambodia")
+gap_Cambodia2 <- select(gap_Cambidia, -continent, -lifeExp)
+
+using the pipe
+
+```{r}
+gap_cambodia <- gapminder %>% filter(country=="Cambodia")
+gap_cambodia2 <- gap_cambodia %>% select(-continent, -lifeExp)
+
+#even better and easier
+
+gap_cambodia <- gapminder %>% 
+  filter(country=="Cambodia") %>% 
+  select(-continent, lifeExp)
+
+
+```
+
+
+
+

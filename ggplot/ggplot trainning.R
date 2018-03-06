@@ -40,7 +40,7 @@ car_plot+
 ggplot(data = mpg, aes(x=displ, y=hwy))+
   geom_point(alpha=0.4)
 
-#comoring points in the plot based on car class
+#coloring points in the plot based on car class
 ggplot(data = mpg, aes(x=displ, y=hwy))+
   geom_point(aes(color=class))
 
@@ -65,7 +65,7 @@ ggplot(data=mpg)+
 
 #Excersise: 
 ggplot(data=mpg)+
-  geom_point(aes(x=displ, y=hwy,color="blue"), alpha=0.4) #herea an example of the color inside the aes. ggplot does not find nothing in the data set call blue therfore it just colors the dots in the default
+  geom_point(aes(x=displ, y=hwy,color="blue"), alpha=0.4) #here an example of the color inside the aes. ggplot does not find nothing in the data set call blue therfore it just colors the dots in the default
 
 #plot with colors representing cyt, if you do it with shape it will give you an error because it is a continoues variable
 ggplot(data = mpg, aes(x=displ, y=hwy))+ 

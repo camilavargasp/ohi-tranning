@@ -1,0 +1,115 @@
+---
+title: "ggplot practice"
+author: "Camila Vargas"
+date: "5/3/2018"
+output: html_document
+---
+
+ggplot practcice
+
+```{r}
+library(tidyverse)
+ggplot(data = mpg, aes(x=displ, y=hwy))+
+  geom_point()
+```
+ 
+Or, you can also say to ggplot to map witing the geom_point function
+
+```{r}
+ggplot(data = mpg)+
+  geom_point(mapping = aes(x=displ, y=hwy))
+```
+
+
+#Exercise 3.2.4
+
+1. Run ggplot(data = mpg). What do you see?
+```{r}
+ggplot(data = mpg)
+```
+
+By plottong just ggplot with the data, R gives you juts the layout for the graph
+
+2. How many rows are in mpg? How many columns?
+
+Using the str() function, str(mpg) you can explore the variables and observations of an object.
+Inn this case there are 234 rows and 11 columnes
+
+3. What does the drv variable describe? Read the help for ?mpg to find out.
+The drv variable describes the type of drive the car has. The possible categories in this variables are: f = front-wheel drive, r = rear wheel drive, 4 = 4wd
+
+4. Make a scatterplot of hwy vs cyl.
+```{r}
+ggplot(data = mpg)+
+  geom_point(mapping = aes(x=hwy, y=cyl))
+```
+
+5. What happens if you make a scatterplot of class vs drv? Why is the plot not useful?
+
+```{r}
+ggplot(data = mpg)+
+  geom_point(mapping = aes(x=class, y=drv))
+```
+
+This is not a useful graph because class and drv are categorical variables. 
+
+********
+
+An aesthetic is a visual property of the objects in your plot. Aesthetics include things like the size, the shape, or the color of your points.
+
+
+QUESTION: How can you color just one category of your variable???
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = compact))
+```
+
+To set an aesthetic manually, set the aesthetic by name as an argument of your geom function; i.e. it goes outside of aes(). You’ll need to pick a value that makes sense for that aesthetic:
+
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy), shape = 22)
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy), shape = 22, color="red")
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy), shape = 22, fill="red")
+```
+
+ When the color, shape, fill functions are outside the aes then it changes the appereance of all the grpah.
+ 
+ 
+#Exercise 3.3.1
+
+2. Which variables in mpg are categorical? Which variables are continuous? (Hint: type ?mpg to read the documentation for the dataset). How can you see this information when you run mpg?
+
+This data set has 11 variables:
+Manufacture moder: categorical
+displ, engine displacement: continuous
+year: ?? categorical
+cyl, number of cylinders: ??continuous (class = interger)
+trans: categorical
+dvr: categorical
+cty: continuous
+hwy: continuous
+fl, fuel type: categorical
+class, type of car: categorical
+
+QUESRION: How can you see this information when you run mpg?????
+
+
+3. Map a continuous variable to color, size, and shape. How do these aesthetics behave differently for categorical vs. continuous variables?
+
+
+4. What happens if you map the same variable to multiple aesthetics?
+
+5. What does the stroke aesthetic do? What shapes does it work with? (Hint: use ?geom_point)
+ 
+ 
+ 
+ 
+ 
+
+
+
