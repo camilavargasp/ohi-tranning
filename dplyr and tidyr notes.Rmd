@@ -266,9 +266,45 @@ gapminder %>%
 ```
 
 
+Joining Data Sets
+
+Make desicion on what is important and whatyou want to keep. For example which informationof what columnes you want to merge. This will determine if you are doing a left join or a right join.
+
+```{r}
+#read Co2 data
+co2 <- read.csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/co2.csv")
+
+
+#explore the data
+head(co2)
+
+#gapminder 2007
+
+gap_2007 <- gapminder %>% 
+  filter(year==2007)
+
+#left join gap_2007 to co2
+
+lj <- left_join(gap_2007, co2, by="country")
 
 
 
+
+```
+
+
+Explore lj
+
+```{r}
+lj %>% dim()
+lj %>% summary()
+```
+
+Right join
+
+```{r}
+rj <- right_join(gap_2007, co2, by="country")
+```
 
 
 
