@@ -1,0 +1,59 @@
+---
+title: "Exploring"
+author: "Camila Vargas"
+date: "8/3/2018"
+output: html_document
+---
+Exploratory data analysis, or EDA - explore your data in a systematic way
+
+Cycle:
+1. Generate questions about your data.
+
+2. Search for answers by visualising, transforming, and modelling your data.
+
+3. Use what you learn to refine your questions and/or generate new questions.
+
+Data cleaning:
+Ask questions about whether your data meets your expectations or not. To do data cleaning, you’ll need to deploy all the tools of EDA: visualisation, transformation, and modelling.
+
+Package:
+```{r}
+library(tidyverse)
+```
+
+Goal during EDA is to develop an understanding of your data!
+Its a creative process. The important thing is to ask right qustions.
+
+Two leading questions:
+1. What type of variation occurs within my variables?
+
+2. What type of covariation occurs between my variables?
+
+
+Distribution of categorical variables using a bar graph
+
+```{r}
+ggplot(data = diamonds) +
+  geom_bar(mapping = aes(x = cut))
+```
+
+To count the number of count in each bar
+
+```{r}
+diamonds %>% 
+  count(cut)
+```
+
+To examine the distribution of continous variables use a histogram
+
+```{r}
+ggplot(data = diamonds) +
+  geom_histogram(mapping = aes(x = carat), binwidth = 0.5)
+```
+
+To compute this counts you combine: ´dplyr::count()´ and ´ggplot2::cut_width()´
+
+
+```{r}
+diamonds %>% #from the data base dimonds
+  count(cut_width(carat, 0.5)) #

@@ -1,5 +1,5 @@
 ---
-title: "dplyr and tidyr"
+title: "dplyr"
 author: "Camila Vargas"
 date: "3/6/2018"
 output: html_document

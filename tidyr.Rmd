@@ -1,0 +1,154 @@
+---
+title: "tidyr"
+author: "Camila Vargas"
+date: "8/3/2018"
+output: html_document
+---
+
+Tidy data using tidyr.
+
+Package
+```{r}
+library(tidyverse)
+```
+
+Tidy data frame: each variable in a column and each oobservation in a row
+
+Types of data frames:
+Wide:  each observation is in one column. For example in the mindgap data, the gdp for each country for year XXXX is in one column. 
+
+Versus 
+
+Long data: in the mpg data set: where each row representing a single car and each column representing a variable of that car such as manufacturer and year.
+
+These different data formats mainly affect readability. For humans, the wide format is often more intuitive since we can often see more of the data on the screen due to it’s shape. However, the long format is more machine readable and is closer to the formatting of databases. 
+
+The ID variables in our dataframes are similar to the fields in a database and observed variables are like the database values.
+
+Eg in the mind gap:
+ID variables: Country, Continent, Yeear
+Observation variables: lifExpen, gdpPercap, pop
+
+Functions:
+turn columns into rows (gather()),
+turn rows into columns (spread()),
+turn a character column into multiple columns (separate()),
+turn multiple character columns into a single column (unite())
+
+
+```{r}
+## wide format
+gap_wide <- readr::read_csv('https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/gapminder_wide.csv')
+
+## yesterday's format (intermediate)
+gapminder <- readr::read_csv('https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/gapminder.csv')
+
+View(gap_wide)
+View(gapminder)
+
+```
+
+
+```{r}
+head(gap_wide)
+str(gap_wide)
+```
+
+```{r}
+str(gapminder)
+```
+
+You use spread() and gather() to transform or reshape data between wide to long formats.
+
+For long format, we’d want just 1 column identifying the variable name (tidyr calls this a ‘key’), and 1 column for the data (tidyr calls this the ’value’).
+
+```{r}
+?gather
+
+gap_long <- gap_wide %>% 
+  gather(key   = obstype_year, #gather function I always have to asign a key (ID) and a value (observation)
+         value = obs_values)
+
+str(gap_long)
+View(gap_long) #not what I want. I need to keep the columnes of continent and country and just gather the observation variables. So we need to give more info about what variables to reshape
+
+```
+
+
+
+```{r}
+gap_long <- gap_wide %>% 
+  gather(key   = obstype_year, #assing name to my key and my values
+         value = obs_values,
+         dplyr::starts_with('pop'),
+         dplyr::starts_with('lifeExp'),
+         dplyr::starts_with('gdpPercap'))  #here i'm listing all the columns to use in gather
+str(gap_long)
+head(gap_long)
+tail(gap_long)
+```
+
+Another way for the same outcome: Excluding the columns you don't want to gather.
+gap_long <- gap_wide %>% 
+  gather(key   = obstype_year,
+         value = obs_values,
+         -continent, -country)
+         
+But,
+Obstype_year actually contains two pieces of information, the observation type (pop,lifeExp, or gdpPercap) and the year. We can use the separate() function to split the character strings into multiple variables.         
+         
+```{r}
+gap_long <- gap_wide %>% 
+  gather(key   = obstype_year,
+         value = obs_values,
+         -continent, -country) %>%
+  separate(obstype_year,
+           into = c('obs_type','year'),
+           sep = "_",
+           convert = TRUE) #this ensures that the year column is an integer rather than a character
+#4 ID variables and 1 observation --> long data frame
+
+str(gap_long)
+head(gap_long)
+
+```
+
+The long format is the preferred format for plotting with ggplot2
+
+Plot
+
+```{r}
+canada_df <- gap_long %>%
+  filter(obs_type == "lifeExp",
+         country == "Canada")
+
+ggplot(canada_df, aes(x = year, y = obs_values)) +
+  geom_line()
+```
+
+
+```{r}
+life_df <- gap_long %>%
+  filter(obs_type == "lifeExp",
+         continent == "Americas")
+
+ggplot(life_df, aes(x = year, y = obs_values, color = country)) +
+  geom_line()
+```
+
+Excersise:!!!!!!!
+Using gap_long, calculate and plot the the mean life expectancy for each continent over time from 1982 to 2007. Give your plot a title and assign x and y labels. Hint: use the dplyr::group_by() and dplyr::summarize() functions.
+
+
+Spread!
+The function spread() is used to transform data from long to intermediate format
+
+
+
+
+
+
+
+
+
+
