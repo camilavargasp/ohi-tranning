@@ -143,6 +143,40 @@ Using gap_long, calculate and plot the the mean life expectancy for each contine
 Spread!
 The function spread() is used to transform data from long to intermediate format
 
+```{r}
+gap_normal <- gap_long %>% 
+  spread(obs_type, obs_values)
+```
+
+
+check and explore the "new" intermediate frame. Compare to the original gapminder frame.
+Same dimensions and names!! All good.
+
+```{r}
+dim(gap_normal)
+dim(gapminder)
+names(gap_normal)
+names(gapminder)
+```
+
+
+Excersise!!!
+Convert “gap_long” all the way back to gap_wide. Hint: you’ll need to create appropriate labels for all our new variables (time*metric combinations) with the opposite of separate: tidyr::unite().
+
+
+Complete!
+
+```{r}
+kelpdf <- data.frame(
+  Year = c(1999, 2000, 2004, 1999, 2004),
+  Taxon = c("Saccharina", "Saccharina", "Saccharina", "Agarum", "Agarum"),
+  Abundance = c(4,5,2,1,8)
+)
+
+kelpdf %>% 
+  complete(Year, Taxon)
+
+```
 
 
 
