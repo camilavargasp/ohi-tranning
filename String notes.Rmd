@@ -1,0 +1,47 @@
+---
+title: "Strings notes"
+author: "Camila Vargas"
+date: "3/16/2018"
+output: html_document
+---
+Notes from tranning on [this link](http://r4ds.had.co.nz/strings.html)
+
+Following the programing in R trainning we where challenged to go over the `string` manipulation in R.
+Let's see how it goes...
+
+#Intoduction
+Lean how does strings work
+How to create them hand by hand
+Focus of the chapter is in regular expresion or regexp
+
+"When you first look at a regexp, you’ll think a cat walked across your keyboard, but as your understanding improves they will soon start to make sense."
+
+What is sting? 
+`stringr` Its a package for string manipulation!!
+
+##Prerequisites
+What do we need
+```{r}
+library(tidyverse)
+library(stringr)
+```
+
+#String Basics
+
+Use "" to create a string (you can also use '', but is less recomended unless- see below)
+```{r}
+string1 <- "This is a string"
+string2 <- 'If I want to include a "quote" inside a string, I use single quotes'
+
+```
+
+
+
+
+
+
+
+
+
+
+

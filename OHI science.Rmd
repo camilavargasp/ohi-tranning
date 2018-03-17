@@ -1,0 +1,38 @@
+---
+title: "OHI science global"
+author: "Camila Vargas"
+date: "9 de marzo de 2018"
+output: html_document
+---
+Excercise
+
+Artisanal Oportunities
+
+1.
+a.
+PPPpcGDP = 1 --> low porverty, high conomic security
+Oao = 1 --> lots of opprotunities
+Then the  Status of AO wuld be equal to the sustainable parameter Sao = 1 in the globlas scale
+
+b.
+PPPpcGDP = 1
+Oao = 0.1 --> Low opportunity
+It will also be 1
+
+What does this tell us about this goal?
+If there is no need, GDP is high then it dosen't matter what is your need.
+or if you have lots of opportunitty it becomes important when the economic scurity is low
+
+
+```{r}
+Du <- (1-1)*(1-0.1)
+Xao <- (1-Du)*1
+```
+
+
+How to prepare the data for Artisanal oportunities
+Get rid of the data files because we are going to generatet them agian.
+
+
+
+

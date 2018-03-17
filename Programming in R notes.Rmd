@@ -1,0 +1,480 @@
+---
+title: "Programming in R"
+author: "Camila Vargas"
+date: "3/16/2018"
+output: html_document
+---
+
+Notes for Chapter 8: Programming in R
+[See this link](http://ohi-science.org/data-science-training/programming.html)
+
+#8.1 Objectives and Resources
+create an R script
+for loops
+joining data
+if statements
+
+#8.2 Analysis Plan
+Plot the gdpPercap for each country in the gapminder data frame. So that’s 142 separate plots! We will automate this, labeling each one with its name and saving it in a folder called figures. We will learn a bunch of things as we go.
+
+#8.3 Create an R script
+In a new R script file...
+```{r}
+## gapminder-analysis.R
+## analysis with gapminder data
+##Camila Vargas
+
+#load packages
+library(tidyverse)
+
+#read data we are going to use - gapminder data
+gapminder <- readr::read_csv('https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/gapminder.csv')
+
+```
+
+
+#8.4 Automatization loops
+Goal: Plot gpdPercap for each country!
+Operation: plotting
+What: countries
+
+`group by()` not useful for plotting.
+Intstead we use s for loop
+
+For just one contry:
+```{r}
+#filter the country you want to plot
+gap_to_plot <- gapminder %>% 
+  filter(country== "Afghanistan")
+
+#plot
+Afghanistan_plot <- ggplot(data = gap_to_plot, aes(x=year, y=gdpPercap))+
+  geom_point()+
+  #add title and save
+  labs(title= paste("Afghanistan", "GDP per capita", sep = " ")) #paste func strings two or more characters together separated by whatever is in the sep= (in this case a space). Useful for crating files names
+
+ggsave(filename = "Afghanistan_dgpPercap.png", plot = Afghanistan_plot)
+
+
+```
+
+
+#8.4.1 Thinking ahead: Cleaning up our code
+
+Programming is all about thinking ahead.. How can I do the same I did with afghanistan for multiple counties without having to type each of their names multiple times??
+
+One option is to create a variable that adrees the "Country". We don't wnat to call our variable country because it is a header of our data set.. so we will call it `cntry`
+
+```{r}
+#create a country variable
+cntry <- "Afghanistan"
+
+#filter the country to plot
+gap_to_plot <- gapminder %>% 
+  filter(country==cntry)
+#plot
+my_plot <- ggplot(data=gap_to_plot, aes(x=year, y=gdpPercap))+
+  geom_point()+
+  labs(title= paste(cntry, "GDP per capita", sep = " "))
+
+ggsave(filename = paste(cntry, "_gdpPercap.png", sep = ""), plot = my_plot) #actual file name is Afghanistan_gdpPercap.png. cntry calls to Afghanistan
+
+```
+
+#8.4.2 For loop basic structure
+
+How can we plot this for every country without having to type all of the countries names!
+(very prone to typos, and it would take long)
+
+Also, what if you would like to plot another variable than gdpPercap.
+
+We need to systematize this process!
+Here is when for loop comes in. This will let us cycle through and do what we want each time.. 
+Basic structure fo a for loop is:
+
+`for(each item in set of items){
+do a thing
+}`
+Lets give it a try
+The following code is not the final outcome fo the for loop I want
+
+```{r}
+cntry <- "Afghanistan" # how can I make this variable for each country in gapminder?? with the unique function see below.
+for(cntry in a list of countries){
+  #filter the country to plot
+gap_to_plot <- gapminder %>% 
+  filter(country==cntry)
+#plot
+my_plot <- ggplot(data=gap_to_plot, aes(x=year, y=gdpPercap))+
+  geom_point()+
+  labs(title= paste(cntry, "GDP per capita", sep = " "))
+
+ggsave(filename = paste(cntry, "_gdpPercap.png", sep = ""), plot = my_plot)
+}
+```
+
+#8.4.3 Executable for loop
+
+Now lets see how we can execute the forloop
+
+```{r}
+#Create a list of countries
+country_list <- c("Albania", "Fiji", "Spain")
+
+for(cntry in country_list){ #in the loop Im creatignt the variable cntry for every "object " in my lits
+  #filter the country to plot
+gap_to_plot <- gapminder %>% 
+  filter(country==cntry)
+#plot
+my_plot <- ggplot(data=gap_to_plot, aes(x=year, y=gdpPercap))+
+  geom_point()+
+  labs(title= paste(cntry, "GDP per capita", sep = " "))
+
+ggsave(filename = paste(cntry, "_gdpPercap.png", sep = ""), plot = my_plot)
+}
+```
+
+How can I make this for all countries in the gapminder data set without typing each of their names?
+
+```{r}
+#First create a folder to save this plots!
+dir.create("figures") #new folder is creates in my working directory
+
+#create a list of countries (vector)
+country_list <- unique(gapminder$country) #unique returns the unique value of each of the variables in the list I called, this case each country.
+
+for (cntry in country_list) {
+  #filter the country to plot
+  gap_to_plot <- gapminder %>%
+    filter(country == cntry)
+  
+  ## plot
+  my_plot <- ggplot(data = gap_to_plot, aes(x = year, y = gdpPercap)) + 
+    geom_point() +
+    ## add title and save
+    labs(title = paste(cntry, "GDP per capita", sep = " "))
+  
+  ## add the figures/ folder
+  ggsave(filename = paste("figures/", cntry, "_gdpPercap.png", sep = ""), plot = my_plot)
+}
+  
+```
+
+For loops are sometimes just the thing you need to iterate over many things in your analyses.
+
+#8.4.4 Clean up our repo
+Im going to delite the folder figures I created because I don't want to safe the in repo
+
+#8.4.5 MY TURN
+
+Modify our for loop so that it:
+loops through countries in Europe only
+plots the cumulative mean gdpPercap (Hint: Use the Data Wrangling Cheatsheet!)
+saves them to a new subfolder inside the (recreated) figures folder called “Europe”.
+Sync to GitHub
+
+```{r}
+#Create a folder to save the plots of Europe
+dir.create("Europe") #new folder is creates in my working directory
+
+#DO CALCULATIONS (SUCH AS CALCULATE CUMMULATIVE MEAN) OUT SIDE THE LOOP
+#filter Europ from gapminder and add the cummulative mean gdp
+gap_europe <- gapminder %>% 
+  filter(continent=="Europe") %>% 
+  mutate(gdpPercap_cummean=dplyr::cummean(gdpPercap)) #remeber the notation for mutate: create the header of the column you are creating = to the value you are assingning to that column.
+
+#create a list of countries to plot (vector)
+europe_list <- unique(gap_europe$country) #unique returns the unique value of each of the variables in the list I called, this case each country in the gap_europe data frame
+
+for (cntry in europe_list) {
+  #filter the country to plot
+  gap_to_plot <- gap_europe %>%
+    filter(country == cntry)
+  
+  ## plot
+  my_plot <- ggplot(data = gap_to_plot, aes(x = year, y = gdpPercap_cummean)) + 
+    geom_point() +
+    ## add title and save
+    labs(title = paste(cntry, " cummulative mean GDP per capita", sep = " "))
+  
+  ## add the figures/ folder
+  ggsave(filename = paste("Europe/", cntry, "_cummeangdpPercap.png", sep = ""), plot = my_plot)
+}
+```
+
+#8.5 Conditional statements with if and else
+Control the flow of our actios with if.. some specific conditions are made.. or else..
+
+also known as "if statements"
+
+This is the basic structure
+```
+# if
+if (condition is true) {
+  do something
+}
+
+# if ... else
+if (condition is true) {
+  do something
+} else {  # that is, if the condition is false,
+  do something different
+}
+```
+In the Europe example.. add the lable "Estimated" to countries that where estimated
+
+First we are just writing the code. In a second step we are going to read the information we need to actually run the code
+
+```{r}
+#Create a folder to save the plots of Europe
+dir.create("Europe") #new folder is creates in my working directory
+
+#DO CALCULATIONS (SUCH AS CALCULATE CUMMULATIVE MEAN) OUT SIDE THE LOOP
+#filter Europ from gapminder and add the cummulative mean gdp
+gap_europe <- gapminder %>% 
+  filter(continent=="Europe") %>% 
+  mutate(gdpPercap_cummean=dplyr::cummean(gdpPercap)) #remeber the notation for mutate: create the header of the column you are creating = to the value you are assingning to that column.
+
+#create a list of countries to plot (vector)
+europe_list <- unique(gap_europe$country) #unique returns the unique value of each of the variables in the list I called, this case each country in the gap_europe data frame
+
+for (cntry in europe_list) {
+  #filter the country to plot
+  gap_to_plot <- gap_europe %>%
+    filter(country == cntry)
+  
+  #add a print message
+  print(paste("Plotting", cntry)) #WHY DO WE ADD THIS - keeps track on waht is happening in the for loop. This will print in the console. It is usefull to kow where the for loop goes wrong.
+  
+  ## plot
+  my_plot <- ggplot(data = gap_to_plot, aes(x = year, y = gdpPercap_cummean)) + 
+    geom_point() +
+    ## add title and save
+    labs(title = paste(cntry, " cummulative mean GDP per capita", sep = " "))
+  
+  #if estimated add as the subtitle
+  if(gap_to_plot$estimate == "yes"){
+    #add a print statement just to check
+    print(paste(cntry, "data are estimated"))
+    my_plot <- my_plot+
+      labs(subtitle("Estimated data"))
+  
+  ## add the figures/ folder
+  ggsave(filename = paste("Europe/", cntry, "_cummeangdpPercap.png", sep = ""), plot = my_plot)
+  }
+  
+}
+```
+
+What is the issue with the if statment and the length condition???
+
+#8.5.3 Executable if statement
+
+```{r}
+#Create a folder to save the plots of Europe
+dir.create("Europe") #new folder is creates in my working directory
+
+#read file where the estimated data exists
+est <- read_csv('https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/countries_estimated.csv')
+
+gapminder_est <- left_join(gapminder, est)
+
+#DO CALCULATIONS (SUCH AS CALCULATE CUMMULATIVE MEAN) OUT SIDE THE LOOP
+#filter Europ from gapminder and add the cummulative mean gdp
+gap_europe <- gapminder_est %>% 
+  filter(continent=="Europe") %>% 
+  mutate(gdpPercap_cummean=dplyr::cummean(gdpPercap)) #remeber the notation for mutate: create the header of the column you are creating = to the value you are assingning to that column.
+
+#create a list of countries to plot (vector)
+europe_list <- unique(gap_europe$country) #unique returns the unique value of each of the variables in the list I called, this case each country in the gap_europe data frame
+
+for (cntry in europe_list) {
+  #filter the country to plot
+  gap_to_plot <- gap_europe %>%
+    filter(country == cntry)
+  
+  #add a print message
+  print(paste("Plotting", cntry)) #WHY DO WE ADD THIS??
+  
+  ## plot
+  my_plot <- ggplot(data = gap_to_plot, aes(x = year, y = gdpPercap_cummean)) + 
+    geom_point() +
+    ## add title and save
+    labs(title = paste(cntry, " cummulative mean GDP per capita", sep = " "))
+  
+  #if estimated add as the subtitle
+  if(any(gap_to_plot$estimated == "yes")){ #ANY() will return a single TRUE or FALSE. The any() overcomes the warning message saying:
+    #In if (gap_to_plot$estimated == "yes") { :
+    #the condition has length > 1 and only the first element will be used.
+    #It lets the if statment to evaluate a whole vector instead of just the first value of the vector. 
+    
+    
+    #add a print statement just to check
+    print(paste(cntry, "data are estimated"))
+    
+    my_plot <- my_plot+
+      labs(subtitle="Estimated data")
+  
+  ## add the figures/ folder
+  ggsave(filename = paste("Europe/", cntry, "_cummeangdpPercap.png", sep = ""), plot = my_plot)
+  }
+  
+}
+```
+
+Note that we do not need an else statement above, because we only want to do something (add a subtitle) if one condition is met. But what if we want to add a different subtitle based on another condition, say where the data are reported, to be extra explicit about it?
+
+#8.5.3 Executable if/else statement
+
+```{r}
+#DO CALCULATIONS (SUCH AS CALCULATE CUMMULATIVE MEAN) OUT SIDE THE LOOP
+#filter Europ from gapminder and add the cummulative mean gdp
+gap_europe <- gapminder_est %>% 
+  filter(continent=="Europe") %>% 
+  mutate(gdpPercap_cummean=dplyr::cummean(gdpPercap)) #remeber the notation for mutate: create the header of the column you are creating = to the value you are assingning to that column.
+
+#create a list of countries to plot (vector)
+europe_list <- unique(gap_europe$country) #unique returns the unique value of each of the variables in the list I called, this case each country in the gap_europe data frame
+
+for (cntry in europe_list) {
+  #filter the country to plot
+  gap_to_plot <- gap_europe %>%
+    filter(country == cntry)
+  
+  #add a print message
+  print(paste("Plotting", cntry)) #WHY DO WE ADD THIS??
+  
+  ## plot
+  my_plot <- ggplot(data = gap_to_plot, aes(x = year, y = gdpPercap_cummean)) + 
+    geom_point() +
+    ## add title and save
+    labs(title = paste(cntry, " cummulative mean GDP per capita", sep = " "))
+  
+  #if estimated add as the subtitle
+  if(any(gap_to_plot$estimated == "yes")){ #ANY() will return a single TRUE or FALSE???
+    
+    #add a print statement just to check
+    print(paste(cntry, "data are estimated"))
+    
+    my_plot <- my_plot+
+      labs(subtitle="Estimated data")
+  } else{
+    my_plot <- my_plot+
+      labs(subtitle="Reported data")
+    print(paste(cntry, "data are reported"))
+  }
+  ## add the figures/ folder
+  ggsave(filename = paste("Europe/", cntry, "_cummeangdpPercap.png", sep = ""), plot = my_plot)
+}
+```
+
+Note that this works because we know there are only two conditions, `Estimated == yes` and `Estimated == no`. In the first if statement we asked for estimated data, and the else condition gives us everything else (which we know is reported). We can be explicit about setting these conditions in the else clause by instead using an `else if` statement. 
+
+This construction is necessary if you have more than two conditions to test for.
+For example, if there would be data that is combined between reported and estimated you can say `else.if(any(gap_to_plot$estimated == "combined"))
+
+Note: this combine varaible does not exist in the data set I made it up to explain the poit above.
+
+Below is how you would construct this in your for loop, similar to above:
+
+```{r}
+if (any(gap_to_plot$estimated == "yes")) { # any() will return a single TRUE or FALSE
+    
+    print(paste(cntry, "data are estimated"))
+    
+    my_plot <- my_plot +
+      labs(subtitle = "Estimated data")
+  } else if (any(gap_to_plot$estimated == "no")){
+    
+    my_plot <- my_plot +
+      labs(subtitle = "Reported data")
+    
+    print(paste(cntry, "data are reported"))
+  }
+```
+
+
+#8.6 More R
+More cool thing in R
+
+#8.6.1 Importing and Installing
+
+To install packages you use: `install.packages("package-name")
+
+Some helpful packages to remember
+
+`readr` to read in .csv files
+`readxl` to read in Excel files
+`stringr` to work with strings
+`lubridate` to work with dates
+
+Installing packages directly form Github use the `devtools` package.
+As folloes:
+`devtools::intall_github()`
+
+#8.6.2 Organization and workflow
+
+Remember to creat folders for figures and intermidiate analysis and final outputs...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
