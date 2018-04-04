@@ -7,9 +7,9 @@ output: html_document
 
 Chapter 6: Data wrangling - dplyr
 
-How do you organize your data - Data wrangling - keeping the raw data raw but moving around columnes and rows to have the necesary tables to answer the questions you want to answe.
+How do you organize your data - Data wrangling - keeping the raw data raw but moving around columnes and rows to have the necesary tables to answer the questions you want to answer.
 
-First make it tydy anf the wrangle it how you want it.
+First make it tydy and the wrangle it how you want it.
 
 tidyverse - group of packeges that contains all the necesary packeges to organize, transform adn visualize your data.
 
@@ -67,7 +67,7 @@ Looks at statistics quickly and also tells you if there are any NA
 summary(gapminder)
 ```
 
-Skimmer packege
+Skimmer packege (skim function for organized summary of data frames)
 
 ```{r}
 library(skimr) #instal.package (skimr)
