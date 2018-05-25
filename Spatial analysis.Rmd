@@ -1,0 +1,29 @@
+---
+title: "Spatial Analysis"
+author: "Camila Vargas"
+date: "5/25/2018"
+output: html_document
+---
+ 
+ Packages
+```{r}
+library(sp) #based packege
+library(rgeos) # 
+library(sf) #new packege
+library(raster) # deals with raster! do everything with raster data
+library(fasteraster) # convert vector data into a raster
+library(rgdal)# information use to project data
+```
+ 
+ 
+ OHI source
+ 
+```{r}
+#look for github file: spatial_common.R (in ohi_globalprep_v2018/master/src/R)
+```
+ 
+```{r}
+
+```
+ 
+ 
